@@ -311,9 +311,16 @@ export function SelectField({ label, id, defaultValue, placeholder, ...props }: 
 type RadioGroupFieldProps = Omit<RadioGroupProps, 'onValueChange' | 'value'> & {
   id: string
   label?: string | React.ReactNode
+  mode?: 'horizontal' | 'vertical'
   options: { key: string; label: string }[]
 }
-export function RadioGroupField({ id, label, defaultValue, ...props }: RadioGroupFieldProps) {
+export function RadioGroupField({
+  id,
+  label,
+  defaultValue,
+  mode = 'vertical',
+  ...props
+}: RadioGroupFieldProps) {
   const formContext = useContext(FormContext)
   useEffect(() => {
     formContext.setValue(id, defaultValue)
@@ -328,14 +335,29 @@ export function RadioGroupField({ id, label, defaultValue, ...props }: RadioGrou
         value={formContext.values[id]}
         onValueChange={(value) => formContext.setValue(id, value)}
       >
-        {props.options.map((item) => (
-          <XStack key={item.key} alignItems="center" gap="$4">
-            <RadioGroup.Item value={item.key} id={item.key}>
-              <RadioGroup.Indicator />
-            </RadioGroup.Item>
-            <Label htmlFor={item.key}>{item.label}</Label>
+        {mode === 'horizontal' ? (
+          <XStack gap="$2" justifyContent="space-between">
+            {props.options.map((item) => (
+              <YStack key={item.key} alignItems="center">
+                <RadioGroup.Item value={item.key} id={item.key}>
+                  <RadioGroup.Indicator />
+                </RadioGroup.Item>
+                <Label htmlFor={item.key}>{item.label}</Label>
+              </YStack>
+            ))}
           </XStack>
-        ))}
+        ) : (
+          <YStack>
+            {props.options.map((item) => (
+              <XStack key={item.key} alignItems="center" gap="$4">
+                <RadioGroup.Item value={item.key} id={item.key}>
+                  <RadioGroup.Indicator />
+                </RadioGroup.Item>
+                <Label htmlFor={item.key}>{item.label}</Label>
+              </XStack>
+            ))}
+          </YStack>
+        )}
       </RadioGroup>
     </YStack>
   )

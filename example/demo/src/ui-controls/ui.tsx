@@ -241,6 +241,18 @@ function FormExample() {
             { label: 'Notepad', key: 'notepad' },
           ]}
         />
+        <RadioGroupField
+          id="feedback"
+          label="How do you like the app?"
+          mode="horizontal"
+          options={[
+            { label: '1', key: '1' },
+            { label: '2', key: '2' },
+            { label: '3', key: '3' },
+            { label: '4', key: '4' },
+            { label: '5', key: '5' },
+          ]}
+        />
         <SubmitButton pendingState={<Text>Submitting...</Text>}>Submit</SubmitButton>
       </RiseForm>
     </ScrollView>

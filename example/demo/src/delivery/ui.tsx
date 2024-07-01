@@ -9,6 +9,9 @@ import {
   XStack,
   YStack,
 } from '@rise-tools/kitchen-sink/server'
+
+import { FeedbackForm } from './feedback-form'
+
 export const models = {
   delivery: UI,
   'delivery:feedback-form': FeedbackForm,
@@ -23,10 +26,6 @@ function UI() {
       <Taxi />
     </YStack>
   )
-}
-
-function FeedbackForm() {
-  return <YStack />
 }
 
 function Groceries() {
