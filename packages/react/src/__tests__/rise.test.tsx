@@ -1,7 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/react'
 import React, { useState } from 'react'
 
-import { action } from '../events'
+import { action, event } from '../events'
 import { BaseRise, ComponentDefinition, ComponentRegistry, RiseEvent } from '../rise'
 
 export const BUILT_IN_COMPONENTS: ComponentRegistry = {
@@ -427,4 +427,22 @@ it('should fire multiple template events for an array of actions', () => {
       },
     ]
   `)
+})
+
+it('should throw error for arrays containing mixed types (only action arrays allowed)', () => {
+  expect(() => {
+    render(
+      <BaseRise
+        components={BUILT_IN_COMPONENTS}
+        model={{
+          $: 'component',
+          key: 'button',
+          component: 'View',
+          props: {
+            onClick: [action('go-back'), action('go-back-again'), event(() => 'foo')],
+          },
+        }}
+      />
+    )
+  }).toThrowError()
 })

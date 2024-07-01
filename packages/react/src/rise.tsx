@@ -142,6 +142,9 @@ export function isHandlerEvent(obj: RiseEvent): obj is HandlerEvent {
 export function isActionModelState(obj: any): obj is ActionModelState {
   return obj !== null && typeof obj === 'object' && obj.$ === 'action'
 }
+export function isActionModalStateContainingArray(obj: any): obj is any[] {
+  return Array.isArray(obj) && obj.some(isActionModelState)
+}
 export function isActionModelStateArray(obj: any): obj is ActionModelState[] {
   return Array.isArray(obj) && obj.every(isActionModelState)
 }
@@ -256,8 +259,13 @@ export function BaseRise({
     if (
       isEventModelState(propValue) ||
       isActionModelState(propValue) ||
-      isActionModelStateArray(propValue)
+      isActionModalStateContainingArray(propValue)
     ) {
+      if (Array.isArray(propValue) && !isActionModelStateArray(propValue)) {
+        throw new RenderError(
+          `Invalid props for component: ${parentNode.component}, props: ${propKey}. Arrays containing a mix of actions and other values are not supported.`
+        )
+      }
       return async (...payload: any[]) => {
         // React events (e.g. from onPress) contain cyclic structures that can't be serialized
         // with JSON.stringify and also provide little to no value for the server.
